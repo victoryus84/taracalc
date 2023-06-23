@@ -16,4 +16,14 @@ docker-compose run --rm web python manage.py createsuperuser
 {% bootstrap_javascript jquery='slim' %}
 {% bootstrap_messages %}        
 
- 
+ GIT notes: 
+  1) I have 2 branches (main & develop)
+  2) Merge process:
+    !!! Merge process should be do without change nothing in the project 
+    2.1) Activate "main" branch ( git chekout main )    
+    2.2) Show current branch status ( git status )
+    2.3) Do merge (  git merge develop )
+      !!! It can show modifications ( git checkout .\taracalc\settings.py )
+    2.4) Do push (  git puss ) it change main branch...
+    
+       

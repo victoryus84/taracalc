@@ -24,6 +24,6 @@ docker-compose run --rm web python manage.py createsuperuser
     2.2) Show current branch status ( git status )
     2.3) Do merge (  git merge develop )
       !!! It can show modifications ( git checkout .\taracalc\settings.py )
-    2.4) Do push (  git puss ) it change main branch...
+    2.4) Do push (  git push ) it change main branch definitively.
     
        

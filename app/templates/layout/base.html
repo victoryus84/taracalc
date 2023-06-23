@@ -1,0 +1,90 @@
+{% load static %}
+
+{% load bootstrap4 %}
+{% if 'use_i18n'|bootstrap_setting %}
+    {% load i18n %}
+    {% get_current_language as LANGUAGE_CODE %}
+{% endif %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!--<meta name="description" content="">-->
+        <title>{% block title %}Главная{% endblock %} - Калькулятор тары ("taracalc")</title>
+        
+        {% bootstrap_css %}
+        
+        <!-- Bootstrap JavaScript if it is in head -->
+        {% if 'javascript_in_head'|bootstrap_setting %}
+            {% bootstrap_javascript %}
+        {% endif %}
+
+        {% block bootstrap4_extra_head %}{% endblock %}
+    
+    </head>
+    <body class="container-fluid bg-dark text-white">
+        <header class="mb-4">
+            <!--<img src="{% static "img/bootstrap5.png" %}" class="img-thumbnail" alt="..."/>--> 
+            <h1 class="display-l text-ceпter">Данные</h1>
+        </header>
+        <div class="row">
+            <ul class="col nav justify-content-end border">
+                    {% if user.is_authenticated %}         
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" 
+                           role="button" aria-haspopup="true" aria-expanded="false">Профиль</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{% url 'app:profile' %}">Moи объявления</a>
+                            <a class="dropdown-item" href="{% url 'app:profile_change' %}">Изменить данные</a>
+                            <a class="dropdown-item" href="{% url 'app:password_change' %}">Изменить пароль</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'app:logout' %}">Выйти</a>
+                            <div class="dropdown-divider"></div>
+                            {% comment %} <a class="dropdown-item" href="{% url 'app:profile_delete' %}">Удалить</a> {% endcomment %}
+                        </div>
+                    </li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'app:login' %}">Bxoд</a></li>
+                    {% endif %}
+                    {% if user.is_superuser  %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'app:register' %}">Регистрация</a></li>      
+                    {% endif %}
+                    
+            </ul>
+        </div>
+        <div class="row">
+            <nav class="col-md-auto nav flex-column border">
+                <a class="nav-link link-light root" href="{% url 'app:index' %}">Главная</a>
+                {% comment %} <span class="nav-link link-light root font-weight-bold">Heдвижимость</span>
+                <a class="nav-link link-light" href="#">Жилье</a>
+                {% endcomment %}
+                <a class="nav-link link-light" href="#">Документы</a>
+                <a class="nav-link link-light" href="{% url 'app:other' page='about' %}">O сайте</a>
+            </nav>
+            <section class="col border py-2">
+                {% block content %}
+                {% endblock %}
+            </section>
+        </div>
+        <footer class="mt-3">
+            <p class="text-right font-italic">&copy; Подвал</p>
+        </footer>
+        
+        {% comment %} 
+        this link is for static version (app/static) of bootstrap
+        <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>  
+        {% endcomment %}
+
+        <!-- Bootstrap JavaScript if it is in body -->
+        {% if not 'javascript_in_head'|bootstrap_setting %}
+            {% bootstrap_javascript %}
+        {% endif %}
+        {% block bootstrap4_extra_script %}{% endblock %}
+      </body>
+</html>

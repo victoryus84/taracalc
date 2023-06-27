@@ -7,7 +7,7 @@ py manage.py startapp polls
 py manage.py createsuperuser
 py manage.py runserver
 
-For docke should use:
+For docker should use:
 docker-compose run --rm web python manage.py makemigrations
 docker-compose run --rm web python manage.py migrate
 docker-compose run --rm web python manage.py createsuperuser

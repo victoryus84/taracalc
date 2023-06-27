@@ -1,15 +1,14 @@
 # syntax=docker/dockerfile:1
 FROM python:3.9
 
-ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-ENV PYTHONUNBUFFERED=1
+WORKDIR /app
 
-WORKDIR /code
-
-COPY requirements.txt /code/
+COPY requirements.txt /app/
 
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt
 
-COPY . /code/
+COPY . /app/

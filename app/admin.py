@@ -69,22 +69,3 @@ class DocumentAdmin(admin.ModelAdmin):
     list_display = ['id', 'is_factura', 'code', 'type', 'date', 'contragent', 'nomenclarture', 'nomenclarture_type', 'transport']
     list_filter = ['type', 'contragent', 'date']
     exclude = ('is_deleted', 'deleted_at', 'deleted_by')
-
-    def get_form(self, request, obj=None, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-
-        if obj is None:  # Check if creating a new instance
-            form.base_fields['code'].disabled = True
-
-        return form
-
-    def formfield_for_choice_field(self, db_field, request, **kwargs):
-        form = super().formfield_for_choice_field(db_field, request, **kwargs)
-
-        if db_field.name == 'is_factura':
-            selected_value = request.POST.get('is_factura')
-
-            if selected_value == 'True':
-                form.base_fields['code'].disabled = False
-
-        return form

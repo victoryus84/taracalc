@@ -1,0 +1,44 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var isFacturaField = document.getElementById("id_is_factura");
+            var codeField = document.getElementById("id_code");
+
+            // Funcție pentru a seta starea câmpului "code" în funcție de valoarea câmpului "is_factura"
+            function setCodeFieldAvailability() {
+                if (isFacturaField.checked) {
+                    codeField.disabled = false;  // Câmpul "code" este activat
+                } else {
+                    codeField.disabled = true;   // Câmpul "code" este dezactivat
+                }
+            }
+
+            // Apelare inițială a funcției pentru a seta starea inițială a câmpului "code"
+            setCodeFieldAvailability();
+
+            // Adăugați un eveniment de ascultare pentru schimbarea valorii câmpului "is_factura"
+            isFacturaField.addEventListener("change", function() {
+                setCodeFieldAvailability();
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    <div class="my-custom-fields">
+        <h2>Custom Fields</h2>
+        <div class="field-box">
+            <label for="id_is_factura">Is Factura:</label>
+            {{ form.is_factura }}
+        </div>
+        <div class="field-box">
+            <label for="id_code">Code:</label>
+            {{ form.code }}
+        </div>
+        <!-- Restul câmpurilor... -->
+    </div>
+{% endblock %}

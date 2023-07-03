@@ -49,7 +49,7 @@ class Catalogs(models.Model):
         if not self.id:
             self.created = timezone.now()
             self.updated = timezone.now()
-        return super(settings.AUTH_USER_MODEL, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     def soft_delete(self, user_id=None):
         self.is_deleted = True

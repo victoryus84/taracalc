@@ -17,11 +17,15 @@ from django.contrib.messages.views import SuccessMessageMixin
 
 from django.core.signing import BadSignature
 
-from .models import AdvUser
+from .models import AdvUser, Document
 from .forms import ChangeUserInfoForm, RegisterUserForm
 from .utilities import signer
 
+from rest_framework import viewsets
+from .serializers import DocumentSerializer 
+
 # Create your views here.
+@login_required
 def index(request):
     # Логика обработки запроса
     return render(request, 'app/index.html')
@@ -33,6 +37,13 @@ def other_page(request, page):
         raise Http404
     return HttpResponse(template.render(request=request))
 
+# Documents view start
+login_required
+def get_documents(request):
+    return render(request, 'app/documents.html')
+    
+# Documents view end
+
 # Authentification / Registration / Activation / Delete (start)
 @login_required
 def profile(request):
@@ -43,7 +54,6 @@ class TC_LoginView(LoginView):
     
 class TC_LogoutView(LoginRequiredMixin, LogoutView):
     template_name = 'app/logout.html'    
-
 
 class TC_ChangeUserInfoView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     model = AdvUser
@@ -65,7 +75,6 @@ class TC_PasswordChangeview(SuccessMessageMixin, LoginRequiredMixin,PasswordChan
     template_name = 'app/password_change.html'
     success_url = reverse_lazy('app:profile')
     success_message = 'Пароль пользователя изменен'
-
 
 class TC_RegisterUserView(CreateView):
     model = AdvUser
@@ -110,5 +119,4 @@ def user_activate(request, sign):
         user.save()
     return render(request, template)    
 # Authentification / Registration / Activation (end)
-
 

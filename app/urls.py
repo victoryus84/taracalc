@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib import admin
 from .views import ( 
-    index, other_page, profile, user_activate, get_documents,
+    index, profile, user_activate, get_documents,
     TC_LoginView, TC_LogoutView, TC_PasswordChangeview, 
     TC_ChangeUserInfoView, TC_RegisterUserView, TC_RegisterDoneView       
 )

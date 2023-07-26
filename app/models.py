@@ -104,13 +104,6 @@ class Documents(models.Model):
         abstract = True
         ordering = ['created']
 
-    def save(self, *args, **kwargs):
-        ''' On save, update timestamps '''
-        if not self.id:
-            self.created = timezone.now()
-            self.updated = timezone.now()
-        return super().save(*args, **kwargs)
-    
     def soft_delete(self, user_id=None):
         self.is_deleted = True
         self.deleted_by = user_id
@@ -151,6 +144,13 @@ class Document(Documents):
         verbose_name = "Документ"
         verbose_name_plural = "Документы"
         ordering = ['-created']
+        
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created = timezone.now()
+            self.updated = timezone.now()
+        return super(Document, self).save(*args, **kwargs)
         
 class DocumentItem(models.Model):
     
@@ -203,18 +203,11 @@ class DocumentItem(models.Model):
             position = self.document.items.aggregate(Max('position'))['position__max'] or 0
             self.position = position + 1
         
-        if not self.total:
-            self.total = self.price * self.quantity
+        self.total = self.price * self.quantity
         
-        super().save(update_fields=['total'], *args, **kwargs)
+        super(DocumentItem, self).save(*args, **kwargs)
         
 
 @receiver(pre_save, sender=DocumentItem)
 def update_total_before_save(sender, instance, **kwargs):
-    instance.total = instance.price * instance.quantity
-
-
-@receiver(post_save, sender=DocumentItem)
-def update_total_after_save(sender, instance, **kwargs):
-    instance.total = instance.items.aggregate(sum=Sum('total'))['sum'] or 0
-    instance.save()           
+    instance.total = instance.price * instance.quantity       

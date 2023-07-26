@@ -36,7 +36,7 @@ from .serializers import (
 # Create your views here.
 def get_home(request):
     # Логика обработки запроса
-    return render(request, 'app/index.html')
+    return render(request, 'app/home.html')
 
 # Documents view start
 @login_required
@@ -91,7 +91,7 @@ class TC_RegisterDoneView(TemplateView):
 class TC_DeleteUserView(LoginRequiredMixin, DeleteView):
     model = AdvUser
     template_name = 'app/delete_user.html'
-    success_url = reverse_lazy('app:index')
+    success_url = reverse_lazy('app:home')
     
     def setup(self, request, *args, **kwargs):
         self.user_id = request.user.pk

@@ -206,3 +206,10 @@ class DocumentItem(models.Model):
         self.total = self.price * self.quantity
         
         super(DocumentItem, self).save(*args, **kwargs)
+        
+@receiver(pre_save, sender=DocumentItem)
+def update_total(sender, instance, **kwargs):
+    instance.total = instance.price * instance.quantity        
+    print('Updated total')    
+        
+        

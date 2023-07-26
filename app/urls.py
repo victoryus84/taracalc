@@ -20,5 +20,4 @@ urlpatterns = [
     path('accounts/profile/change/', TC_ChangeUserInfoView.as_view(), name='profile_change'),
     path('accounts/profile/', profile, name='profile'),
     path('accounts/login/', TC_LoginView.as_view(), name='login'),
-    path('<str:page>/', other_page, name='other'),
 ]

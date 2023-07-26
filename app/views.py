@@ -39,16 +39,6 @@ def index(request):
     # Логика обработки запроса
     return render(request, 'app/index.html')
 
-def other_page(request, page):
-    # try:
-    #     template = get_template('app/' + page + '.html')
-    # except TemplateDoesNotExist:
-    #     raise Http404
-    # return HttpResponse(template.render(request=request))
-    template_name = 'app/' + page + '.html'
-    template = get_object_or_404(Document, id=page)
-    return render(request, template_name, {"document": template})
-
 # Documents view start
 login_required
 def get_documents(request):

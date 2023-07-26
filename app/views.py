@@ -34,7 +34,6 @@ from .serializers import (
 )
 
 # Create your views here.
-@login_required
 def index(request):
     # Логика обработки запроса
     return render(request, 'app/index.html')

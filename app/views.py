@@ -1,28 +1,37 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, Http404
+from django.shortcuts import (
+    render, get_object_or_404, HttpResponse
+)
+# from django.http import HttpResponse, Http404
 from django.template import TemplateDoesNotExist
 from django.urls import reverse_lazy
 
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import ( 
+    CreateView, UpdateView, DeleteView
+)
 from django.views.generic.base import TemplateView
 
 from django.template.loader import get_template
 
 from django.contrib import messages
 from django.contrib.auth import logout
-from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-
+from django.contrib.auth.views import (
+    LoginView, LogoutView, PasswordChangeView
+)
 from django.core.signing import BadSignature
 
 from .models import AdvUser, Document
-from .forms import ChangeUserInfoForm, RegisterUserForm
+from .forms import ( 
+    ChangeUserInfoForm, RegisterUserForm
+)
 from .utilities import signer
 
 from rest_framework import viewsets
-from .serializers import DocumentSerializer 
+from .serializers import (
+    AdvUserSerializer, DocumentSerializer 
+)
 
 # Create your views here.
 @login_required
@@ -31,11 +40,14 @@ def index(request):
     return render(request, 'app/index.html')
 
 def other_page(request, page):
-    try:
-        template = get_template('app/' + page + '.html')
-    except TemplateDoesNotExist:
-        raise Http404
-    return HttpResponse(template.render(request=request))
+    # try:
+    #     template = get_template('app/' + page + '.html')
+    # except TemplateDoesNotExist:
+    #     raise Http404
+    # return HttpResponse(template.render(request=request))
+    template_name = 'app/' + page + '.html'
+    template = get_object_or_404(Document, id=page)
+    return render(request, template_name, {"document": template})
 
 # Documents view start
 login_required

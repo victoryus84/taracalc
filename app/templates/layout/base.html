@@ -40,6 +40,9 @@
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" 
                            role="button" aria-haspopup="true" aria-expanded="false">Профиль</a>
                         <div class="dropdown-menu">
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'admin:index' %}">Админка</a>
+                            <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{% url 'app:profile' %}">Moи объявления</a>
                             <a class="dropdown-item" href="{% url 'app:profile_change' %}">Изменить данные</a>
                             <a class="dropdown-item" href="{% url 'app:password_change' %}">Изменить пароль</a>

@@ -12,6 +12,10 @@ docker-compose run --rm web python manage.py makemigrations
 docker-compose run --rm web python manage.py migrate
 docker-compose run --rm web python manage.py createsuperuser
 
+PowerShell:
+docker-compose build ; docker-compose run --rm web python manage.py makemigrations ; docker-compose run --rm web python manage.py migrate ; docker-compose up -d 
+docker-compose down ; docker-compose up -d
+
 Deploy:
 docker compose run --rm web python manage.py collectstatic
 

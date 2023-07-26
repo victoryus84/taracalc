@@ -1,7 +1,9 @@
 from django.db import models
-from enum import Enum
 from django.utils import timezone
-
+from django.db.models import Max, Sum
+from django.db.models.signals import pre_save, post_save
+from django.dispatch import receiver
+from django.utils.translation import gettext_lazy as _
 # Change default auth 
 # cvictor 05.06.2023
 from django.contrib.auth.models import AbstractUser
@@ -19,15 +21,7 @@ class AdvUser(AbstractUser):
     class Meta(AbstractUser.Meta):
         pass
 # Custom AUTH block (end)  
-
-class DocumentType(Enum):   # A subclass of Enum
-    Income = "Приход"
-    Outcome = "Расход"
-
-class TaraType(Enum):   # A subclass of Enum
-    Income = "Темное"
-    Outcome = "Светлое"
-        
+      
 class Catalogs(models.Model):
     
     name     = models.CharField(max_length=150, blank=False) 
@@ -74,7 +68,7 @@ class Contragent(Catalogs):
 
 class Nomenclature(Catalogs):
     
-    price    = models.DecimalField(max_digits=15,  decimal_places=2)
+    price    = models.DecimalField(max_digits=12,  decimal_places=2)
     
     class Meta:
         verbose_name = "Номенклатура"
@@ -90,8 +84,14 @@ class Vehicles(Catalogs):
     
 class Documents(models.Model):
     
+    TYPE_CHOICES = [
+        ('0',"Приход"), 
+        ('1',"Расход"),
+        ('2',"Перемещение"),
+        ('3',"Возврат"),
+    ] 
     code       = models.CharField(max_length=14, blank=True, null=True, unique=True)
-    type       = models.CharField(max_length=6, blank=False, choices=[(tag, tag.value) for tag in DocumentType])           
+    type       = models.CharField(max_length=1, blank=False, choices=TYPE_CHOICES, default='1')           
     
     created    = models.DateTimeField(editable=False, default=timezone.now)
     updated = models.DateTimeField(editable=False, default=timezone.now)
@@ -109,7 +109,7 @@ class Documents(models.Model):
         if not self.id:
             self.created = timezone.now()
             self.updated = timezone.now()
-        return super(settings.AUTH_USER_MODEL, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
     
     def soft_delete(self, user_id=None):
         self.is_deleted = True
@@ -118,18 +118,103 @@ class Documents(models.Model):
         self.save()
 
     def __str__(self):
-        return self.name
+        return self.type
 
 class Document(Documents):
     
-    is_factura = models.BooleanField(default=False)
-    contragent = models.ForeignKey(Contragent, on_delete=models.DO_NOTHING, blank=False)     
-    nomenclarture = models.ForeignKey(Nomenclature, on_delete=models.DO_NOTHING, blank=False)
-    qty = models.IntegerField(default=1, blank=False, )
-    date = models.DateField(auto_now=True) 
-    nomenclarture_type = models.CharField(max_length=7, blank=False, choices=[(tag, tag.value) for tag in TaraType])  
-    transport = models.ForeignKey(Vehicles, on_delete=models.DO_NOTHING, blank=True)
+    is_factura = models.BooleanField(
+        default=False
+        )
+    
+    contragent = models.ForeignKey(
+        Contragent, 
+        on_delete=models.DO_NOTHING, 
+        blank=False
+        )
+         
+    date = models.DateField(
+        auto_now=True
+        ) 
+    
+    transport = models.ForeignKey(
+        Vehicles, 
+        on_delete=models.DO_NOTHING, 
+        blank=True, 
+        null=True
+        )
+    
+    @property
+    def total(self):
+        return self.items.aggregate(sum=Sum('total'))['sum']
     
     class Meta:
         verbose_name = "Документ"
         verbose_name_plural = "Документы"
+        ordering = ['-created']
+        
+class DocumentItem(models.Model):
+    
+    TARA_CHOICES = [
+        ('0',"Светлое"), 
+        ('1',"Темное"),
+        ('2',"Белое"),
+    ] 
+    document = models.ForeignKey(
+        Document,
+        models.CASCADE,
+        related_name='items',
+    )
+    position = models.PositiveIntegerField(
+        verbose_name=_('Position'),
+        editable=False,
+        db_index=True,
+    )
+    nomenclature = models.ForeignKey(
+        Nomenclature,
+        models.PROTECT,
+    )
+    taratype = models.CharField(
+        max_length=1, 
+        blank=False, 
+        choices=TARA_CHOICES, 
+        default='0'  
+    )    
+    price = models.DecimalField(
+        _('Price'),
+        max_digits=12,
+        decimal_places=2,
+        default=0,
+    )
+    quantity = models.DecimalField(
+        _('Quantity'),
+        max_digits=10,
+        decimal_places=3,
+        default=0,
+    )
+    total = models.DecimalField(
+        _('Total'),
+        max_digits=12,
+        decimal_places=2,
+        default=0,
+    )
+
+    def save(self, *args, **kwargs):
+        if not self.position:
+            position = self.document.items.aggregate(Max('position'))['position__max'] or 0
+            self.position = position + 1
+        
+        if not self.total:
+            self.total = self.price * self.quantity
+        
+        super().save(update_fields=['total'], *args, **kwargs)
+        
+
+@receiver(pre_save, sender=DocumentItem)
+def update_total_before_save(sender, instance, **kwargs):
+    instance.total = instance.price * instance.quantity
+
+
+@receiver(post_save, sender=DocumentItem)
+def update_total_after_save(sender, instance, **kwargs):
+    instance.total = instance.items.aggregate(sum=Sum('total'))['sum'] or 0
+    instance.save()           

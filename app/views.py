@@ -34,7 +34,7 @@ from .serializers import (
 )
 
 # Create your views here.
-def index(request):
+def get_home(request):
     # Логика обработки запроса
     return render(request, 'app/index.html')
 

@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib import admin
 from .views import ( 
-    index, profile, user_activate, get_documents, get_about,
+    get_home, profile, user_activate, get_documents, get_about,
     TC_LoginView, TC_LogoutView, TC_PasswordChangeview, 
     TC_ChangeUserInfoView, TC_RegisterUserView, TC_RegisterDoneView       
 )
@@ -9,7 +9,7 @@ from .views import (
 app_name = 'app'
 
 urlpatterns = [
-    path('', index, name='index'),
+    path('', get_home, name='home'),
     path('my-admin/', admin.site.urls),
     path('documents/', get_documents, name='documents'),
     path('accounts/register/activate/<str:sign>/', user_activate, name='register_activate'),

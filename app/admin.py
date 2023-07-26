@@ -92,7 +92,8 @@ class DocumentAdmin(admin.ModelAdmin):
         'date', 
         'is_factura', 
         'contragent', 
-        'transport'
+        'transport',
+        'total_per_document',
     )
     list_filter = (
         'type', 

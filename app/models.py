@@ -136,9 +136,11 @@ class Document(Documents):
         null=True
         )
     
-    @property
-    def total(self):
-        return self.items.aggregate(sum=Sum('total'))['sum']
+    total_per_document = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=0,
+        )
     
     class Meta:
         verbose_name = "Документ"
@@ -202,7 +204,7 @@ class DocumentItem(models.Model):
         if not self.position:
             position = self.document.items.aggregate(Max('position'))['position__max'] or 0
             self.position = position + 1
-        
+        self.price = self.nomenclature.price 
         self.total = self.price * self.quantity
         
         super(DocumentItem, self).save(*args, **kwargs)

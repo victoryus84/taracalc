@@ -45,6 +45,8 @@ def get_documents(request):
     return render(request, 'app/documents.html')
     
 # Documents view end
+def get_about(request):
+    return  render(request, 'app/about.html')
 
 # Authentification / Registration / Activation / Delete (start)
 @login_required

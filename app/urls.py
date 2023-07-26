@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib import admin
 from .views import ( 
-    index, profile, user_activate, get_documents,
+    index, profile, user_activate, get_documents, get_about,
     TC_LoginView, TC_LogoutView, TC_PasswordChangeview, 
     TC_ChangeUserInfoView, TC_RegisterUserView, TC_RegisterDoneView       
 )
@@ -20,4 +20,5 @@ urlpatterns = [
     path('accounts/profile/change/', TC_ChangeUserInfoView.as_view(), name='profile_change'),
     path('accounts/profile/', profile, name='profile'),
     path('accounts/login/', TC_LoginView.as_view(), name='login'),
+    path('about/', get_about, name='about'),
 ]

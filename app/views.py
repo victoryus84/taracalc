@@ -40,7 +40,7 @@ def index(request):
     return render(request, 'app/index.html')
 
 # Documents view start
-login_required
+@login_required
 def get_documents(request):
     return render(request, 'app/documents.html')
     

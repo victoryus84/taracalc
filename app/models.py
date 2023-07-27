@@ -199,7 +199,12 @@ class DocumentItem(models.Model):
         decimal_places=2,
         default=0,
     )
-
+    
+    class Meta:
+        verbose_name = "Товар в документе"
+        verbose_name_plural = "Товары в документах"
+        ordering = ['-document', 'position']
+        
     def save(self, *args, **kwargs):
         if not self.position:
             position = self.document.items.aggregate(Max('position'))['position__max'] or 0

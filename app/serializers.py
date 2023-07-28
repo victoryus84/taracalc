@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import AdvUser, Document
+from .models import AdvUser
+from documents.models import Document
         
 class AdvUserSerializer(serializers.ModelSerializer):
     class Meta:

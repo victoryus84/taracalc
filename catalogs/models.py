@@ -32,10 +32,6 @@ class Catalogs(models.Model):
         self.deleted = timezone.now()
         self.save()
 
-    def __str__(self):
-        return self.name
-
-
 class Contragent(Catalogs):
      
     is_jur   = models.BooleanField(default=True)
@@ -43,21 +39,30 @@ class Contragent(Catalogs):
     code_gov = models.CharField(max_length=13, blank=True, unique=True)    
     code_tva = models.CharField(max_length=9, blank=True, unique=True)
 
+    def __str__(self):
+        return "Контрагент %s, %s, %s" % (self.id, self.name, self.code_gov)
+
     class Meta:
         verbose_name = "Контрагент"
         verbose_name_plural = "Контрагенты"
-
+       
 class Nomenclature(Catalogs):
     
     price    = models.DecimalField(max_digits=12,  decimal_places=2)
+   
+    def __str__(self):
+        return "%s, %s, %s" % (self.id, self.name, self.price)
     
     class Meta:
         verbose_name = "Номенклатура"
         verbose_name_plural = "Номенклатура"
-
+  
 class Vehicles(Catalogs):
     
     driver = models.CharField(max_length=50)
+    
+    def __str__(self):
+        return "%s, %s, %s" % (self.id, self.name, self.driver)
     
     class Meta:
         verbose_name = "Автомобиль"

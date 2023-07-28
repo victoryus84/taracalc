@@ -17,8 +17,7 @@ class Catalogs(models.Model):
     
     class Meta:
         abstract = True
-        ordering = ['name']
-        
+
     def save(self, *args, **kwargs):
         ''' On save, update timestamps '''
         if not self.id:
@@ -40,12 +39,13 @@ class Contragent(Catalogs):
     code_tva = models.CharField(max_length=9, blank=True, unique=True)
 
     def __str__(self):
-        return "Контрагент %s, %s, %s" % (self.id, self.name, self.code_gov)
+        return "%s, %s, %s" % (self.id, self.name, self.code_gov)
 
     class Meta:
         verbose_name = "Контрагент"
         verbose_name_plural = "Контрагенты"
-       
+        ordering = ["id"]
+        
 class Nomenclature(Catalogs):
     
     price    = models.DecimalField(max_digits=12,  decimal_places=2)
@@ -56,7 +56,8 @@ class Nomenclature(Catalogs):
     class Meta:
         verbose_name = "Номенклатура"
         verbose_name_plural = "Номенклатура"
-  
+        ordering = ["id"]
+        
 class Vehicles(Catalogs):
     
     driver = models.CharField(max_length=50)
@@ -67,4 +68,4 @@ class Vehicles(Catalogs):
     class Meta:
         verbose_name = "Автомобиль"
         verbose_name_plural = "Автомобили"
-    
+        ordering = ["id"]

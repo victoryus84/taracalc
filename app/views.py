@@ -22,7 +22,7 @@ from django.contrib.auth.views import (
 )
 from django.core.signing import BadSignature
 
-from .models import AdvUser, Document
+from .models import AdvUser
 from .forms import ( 
     ChangeUserInfoForm, RegisterUserForm
 )

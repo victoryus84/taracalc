@@ -52,57 +52,5 @@ admin.site.register(AdvUser, AdvUserAdmin)
 
 # Custom AUTH block (end)  
 
-@admin.register(Contragent)
-class ContragentAdmin(admin.ModelAdmin):
-    exclude = ('is_deleted', 'deleted_at', 'deleted_by')
-    
-@admin.register(Nomenclature)
-class NomenclatureAdmin(admin.ModelAdmin):
-    exclude = ('is_deleted', 'deleted_at', 'deleted_by')
-    
-@admin.register(Vehicles)
-class VehiclesAdmin(admin.ModelAdmin):
-    exclude = ('is_deleted', 'deleted_at', 'deleted_by')
     
     
-class DocumentItemInline(admin.TabularInline):
-    model = DocumentItem
-    fields = (
-        'position',
-        'nomenclature',
-        'taratype',
-        'price',
-        'quantity',
-        'total',
-    )
-    readonly_fields = (
-        'position',
-    )
-    ordering = ['position']       
-    
-@admin.register(Document)
-class DocumentAdmin(admin.ModelAdmin):
-    exclude = ('is_deleted', 'deleted_by')
-    inlines = (
-        DocumentItemInline,
-    )    
-    list_display = (
-        'type', 
-        'code', 
-        'date', 
-        'is_factura', 
-        'contragent', 
-        'transport',
-        'total_per_document',
-    )
-    list_filter = (
-        'type', 
-        'contragent', 
-        'date'
-    )
-    search_fields = (
-        '=number',
-    )
-    ordering  = ['-date']
-    
- 

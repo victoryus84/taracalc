@@ -17,12 +17,12 @@ class Documents(models.Model):
         ('2',"Перемещение"),
         ('3',"Возврат"),
     ] 
-    code       = models.CharField(max_length=14, blank=True, null=True, unique=True)
+    number     = models.CharField(max_length=14, blank=True, null=True, unique=True)
     type       = models.CharField(max_length=1, blank=False, choices=TYPE_CHOICES, default='1')           
-    
-    created    = models.DateTimeField(editable=False, default=timezone.now)
-    updated = models.DateTimeField(editable=False, default=timezone.now)
-    
+    date       = models.DateTimeField(editable=True, default=timezone.now) 
+    created    = models.DateTimeField(auto_now_add=True, auto_now=False)
+    updated    = models.DateTimeField(auto_now_add=False, auto_now=True)
+    is_active  = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
     deleted    = models.DateTimeField(editable=False, default=timezone.now)
     deleted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, blank=True, null=True)
@@ -44,17 +44,11 @@ class Document(Documents):
     is_factura = models.BooleanField(
         default=False
         )
-    
     contragent = models.ForeignKey(
         Contragent, 
         on_delete=models.DO_NOTHING, 
         blank=False
         )
-         
-    date = models.DateField(
-        auto_now=True
-        ) 
-    
     transport = models.ForeignKey(
         Vehicles, 
         on_delete=models.DO_NOTHING, 
@@ -76,7 +70,6 @@ class Document(Documents):
     def save(self, *args, **kwargs):
         ''' On save, update timestamps '''
         if not self.id:
-            self.created = timezone.now()
             self.updated = timezone.now()
         return super(Document, self).save(*args, **kwargs)
         

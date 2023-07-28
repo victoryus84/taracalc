@@ -44,7 +44,6 @@ class Contragent(Catalogs):
     class Meta:
         verbose_name = "Контрагент"
         verbose_name_plural = "Контрагенты"
-        ordering = ["id"]
         
 class Nomenclature(Catalogs):
     
@@ -56,7 +55,6 @@ class Nomenclature(Catalogs):
     class Meta:
         verbose_name = "Номенклатура"
         verbose_name_plural = "Номенклатура"
-        ordering = ["id"]
         
 class Vehicles(Catalogs):
     
@@ -68,4 +66,4 @@ class Vehicles(Catalogs):
     class Meta:
         verbose_name = "Автомобиль"
         verbose_name_plural = "Автомобили"
-        ordering = ["id"]
+        

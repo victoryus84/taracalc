@@ -14,7 +14,7 @@ class DocumentItemInline(admin.TabularInline):
     readonly_fields = (
         'position',
     )
-    ordering = ['position']       
+    ordering = ['-document', 'position']       
     
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):

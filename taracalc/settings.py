@@ -43,6 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app',
+    'catalogs',
+    'documents',
+    'journals',
     'bootstrap4',
     'rest_framework',
 ]

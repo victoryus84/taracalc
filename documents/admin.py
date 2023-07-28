@@ -37,7 +37,7 @@ class DocumentAdmin(admin.ModelAdmin):
         'date'
     )
     search_fields = (
-        '=number',
+        'contragent',
     )
     ordering  = ['-date']
     

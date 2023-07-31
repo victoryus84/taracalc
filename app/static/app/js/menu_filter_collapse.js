@@ -2,7 +2,7 @@
     
   var element_2_collapse = '#changelist-filter';
   var element_head       = 'h2'
-  var filter_title       = 'h3'
+  var filter_title       = 'h2'
   
   // this is needed for full table resize after filter menu collapse
   var change_list        = '#changelist'
